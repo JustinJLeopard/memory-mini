@@ -42,6 +42,10 @@ python_version = "3.11"
 strict = true
 packages = ["memory_mini"]
 
+[[tool.mypy.overrides]]
+module = ["numpy"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 addopts = "-ra"
 testpaths = ["tests"]
