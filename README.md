@@ -2,6 +2,19 @@
 
 Minimal reference for durable agent memory: namespaced key-value storage with upsert, soft-delete, cleanup, optional embeddings, and SQLite durability.
 
+`memory-mini` is intentionally small. It exists to make one point easy to audit:
+agent memory is infrastructure, not a transcript. Namespaces, lifecycle,
+upserts, retention, and optional retrieval hooks should be explicit before a
+fleet depends on them.
+
+## What It Proves
+
+- Repeated writes should be a normal upsert path, not delete-then-store.
+- Soft-delete and cleanup are separate lifecycle steps.
+- Namespaces keep global facts, project facts, and session summaries from
+  collapsing into one undifferentiated pile.
+- Embeddings are optional; the durable key-value contract stands on its own.
+
 ## Install
 
 ```bash
@@ -36,3 +49,9 @@ Soft-delete and cleanup are deliberately separate. Soft-delete hides an entry fr
 - [Usage](docs/USAGE.md)
 - [Lifecycle](docs/LIFECYCLE.md)
 - [Embeddings](docs/EMBEDDINGS.md)
+
+## Related
+
+- [JustAi](https://github.com/JustinJLeopard/JustAi) — orchestration control plane.
+- [safe-mini](https://github.com/JustinJLeopard/safe-mini) — safe local execution substrate.
+- [route-mini](https://github.com/JustinJLeopard/route-mini) — routing policy reference.
