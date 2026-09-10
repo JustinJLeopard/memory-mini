@@ -2,25 +2,36 @@
 
 Minimal reference for durable agent memory: namespaced key-value storage with upsert, soft-delete, cleanup, optional embeddings, and SQLite durability.
 
-`memory-mini` is intentionally small. It exists to make one point easy to audit:
-agent memory is infrastructure, not a transcript. Namespaces, lifecycle,
-upserts, retention, and optional retrieval hooks should be explicit before a
-fleet depends on them.
+`memory-mini` is intentionally small. It is a local reference implementation
+for inspecting namespaced SQLite storage, lifecycle operations, upserts,
+retention, and optional embedding helpers. Its scope is the code and tests in
+this repository, not a hosted memory service or a production-readiness claim.
 
-## What It Proves
+## What to inspect
 
-- Repeated writes should be a normal upsert path, not delete-then-store.
-- Soft-delete and cleanup are separate lifecycle steps.
-- Namespaces keep global facts, project facts, and session summaries from
-  collapsing into one undifferentiated pile.
-- Embeddings are optional; the durable key-value contract stands on its own.
+- [`store.py`](src/memory_mini/store.py) defines the SQLite schema, the
+  `(namespace, key)` uniqueness rule, and the `ON CONFLICT` upsert path.
+- [`store.py`](src/memory_mini/store.py) keeps soft-delete and retention-based
+  cleanup as separate operations.
+- [`namespace.py`](src/memory_mini/namespace.py) contains the path-like
+  namespace normalization and traversal helpers.
+- [`embeddings.py`](src/memory_mini/embeddings.py) contains the optional vector
+  helpers; the package has no required runtime dependencies.
 
 ## Install
 
+Install directly from the Git repository. Use the base command or the command
+with the optional embedding dependency:
+
 ```bash
-pip install memory-mini
-pip install memory-mini[embed]
+# Base package
+python -m pip install "memory-mini @ git+https://github.com/JustinJLeopard/memory-mini.git@main"
+
+# Base package plus NumPy-backed embedding helpers
+python -m pip install "memory-mini[embed] @ git+https://github.com/JustinJLeopard/memory-mini.git@main"
 ```
+
+There is currently no PyPI release for this package.
 
 ## 30-second example
 
